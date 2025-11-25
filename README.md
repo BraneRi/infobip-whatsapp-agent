@@ -36,12 +36,21 @@ A Node.js backend application to handle WhatsApp messages via Infobip's API.
 
 4. **Edit `.env` file with your credentials**
    ```env
+   # Infobip Configuration
    INFOBIP_API_KEY=your_actual_api_key
    INFOBIP_BASE_URL=https://api.infobip.com
    WHATSAPP_SENDER=447860088970
+   
+   # OpenAI Configuration
+   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_MODEL=gpt-4
+   
+   # Server Configuration
    PORT=3000
    NODE_ENV=development
    ```
+   
+   **Important:** Get your OpenAI API key from https://platform.openai.com/api-keys
 
 5. **Run the server**
    ```bash
@@ -89,45 +98,31 @@ whatsapp-webhook/
 └── README.md
 ```
 
-## Customizing Bot Logic
+## Bot Configuration
 
-Edit `handlers/messageHandler.js` to implement your bot logic:
+This bot is configured as a **Lease Agent** powered by OpenAI GPT-4. The bot can:
 
-```javascript
-async processMessage(content, state) {
-  // Add your logic here
-  // Examples:
-  // - Call Claude API
-  // - Call OpenAI API
-  // - Database queries
-  // - Business rules
-  
-  return "Your response here";
-}
-```
+- ✅ Notify customers when lease periods are ending
+- ✅ Discuss available vehicles for lease
+- ✅ Provide information about pricing and lease terms
+- ✅ Answer questions about lease agreements
+- ✅ Simulate realistic conversations about cars and leasing
 
-### Example: Integrating Claude API
+### OpenAI Configuration
 
-```javascript
-const Anthropic = require('@anthropic-ai/sdk');
+The bot uses OpenAI GPT-4 (configurable via `OPENAI_MODEL` in `.env`). The system prompt is configured in `services/openaiService.js` and can be customized to change the bot's personality and capabilities.
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY
-});
+### Conversation Memory
 
-async processMessage(content, state) {
-  const message = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20241022",
-    max_tokens: 1024,
-    messages: [{
-      role: "user",
-      content: content
-    }]
-  });
-  
-  return message.content[0].text;
-}
-```
+The bot maintains conversation history for each user, allowing for context-aware responses. The conversation history is stored in memory (in production, consider using Redis or a database).
+
+### Customizing the Bot
+
+To customize the bot's behavior:
+
+1. **Change the system prompt**: Edit `services/openaiService.js` and modify the `systemPrompt` property
+2. **Adjust model settings**: Change `OPENAI_MODEL` in `.env` (options: `gpt-4`, `gpt-4-turbo`, `gpt-3.5-turbo`)
+3. **Modify conversation logic**: Edit `handlers/messageHandler.js` to add custom business logic
 
 ## API Endpoints
 

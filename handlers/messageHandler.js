@@ -1,9 +1,11 @@
 /**
  * Message Handler
  * 
- * This is where you implement your bot logic.
- * You can integrate Claude API, OpenAI, or any custom business logic here.
+ * Lease Agent Bot powered by OpenAI GPT-4
+ * Handles conversations about car leasing, pricing, and lease management.
  */
+
+const openaiService = require('../services/openaiService');
 
 class MessageHandler {
   constructor() {
@@ -29,15 +31,7 @@ class MessageHandler {
     const state = this.getConversationState(from);
 
     try {
-      // 🤖 PLACEHOLDER: Add your bot logic here
-      // Examples:
-      // - Call Claude API
-      // - Call OpenAI API
-      // - Implement rule-based logic
-      // - Query database
-      // - Call external services
-
-      // Simple echo bot example (replace with your logic)
+      // Generate AI response using OpenAI GPT-4 with lease agent context
       const response = await this.processMessage(content, state);
 
       // Update conversation state
@@ -52,26 +46,46 @@ class MessageHandler {
   }
 
   /**
-   * Process the message and generate a response
-   * 🤖 REPLACE THIS WITH YOUR BOT LOGIC
+   * Process the message and generate a response using OpenAI GPT-4
+   * The bot acts as a lease agent with conversation memory
    */
   async processMessage(content, state) {
-    // Example: Simple echo bot
-    // Replace this entire function with your logic
-    
-    const lowerContent = content.toLowerCase();
-
-    // Simple keyword matching example
-    if (lowerContent.includes('hello') || lowerContent.includes('hi')) {
-      return "Hello! 👋 How can I help you today?";
+    try {
+      // Get conversation history for this user
+      const conversationHistory = state.conversationHistory || [];
+      
+      // Format history for OpenAI (keep last 10 messages to avoid token limits)
+      const recentHistory = conversationHistory.slice(-10);
+      const formattedHistory = openaiService.formatConversationHistory(recentHistory);
+      
+      // Generate response using OpenAI
+      const response = await openaiService.generateResponse(content, formattedHistory);
+      
+      // Update conversation history
+      conversationHistory.push(
+        { role: 'user', content: content },
+        { role: 'assistant', content: response }
+      );
+      
+      // Keep only last 20 messages to manage memory
+      if (conversationHistory.length > 20) {
+        state.conversationHistory = conversationHistory.slice(-20);
+      } else {
+        state.conversationHistory = conversationHistory;
+      }
+      
+      return response;
+      
+    } catch (error) {
+      console.error('Error in processMessage:', error);
+      
+      // Fallback response if OpenAI fails
+      if (error.message.includes('API key') || error.message.includes('OPENAI_API_KEY')) {
+        return "I'm sorry, but the AI service is not properly configured. Please contact support.";
+      }
+      
+      return "I'm sorry, I'm having trouble processing your request right now. Please try again in a moment.";
     }
-
-    if (lowerContent.includes('help')) {
-      return "I'm here to assist you! You can ask me questions or tell me what you need.";
-    }
-
-    // Default response
-    return `You said: "${content}"\n\nThis is a placeholder response. Implement your bot logic in handlers/messageHandler.js`;
   }
 
   /**
@@ -83,7 +97,8 @@ class MessageHandler {
         conversationId: Date.now().toString(),
         messageCount: 0,
         lastMessageTime: Date.now(),
-        context: {}
+        context: {},
+        conversationHistory: [] // Store conversation history for OpenAI
       });
     }
     return this.conversationState.get(from);
