@@ -63,10 +63,9 @@ app.get('/health', (req, res) => {
 });
 
 // Main webhook endpoint for incoming WhatsApp messages
-// Also handle root path in case Infobip is configured to send to /
-app.post(['/webhook/whatsapp', '/'], async (req, res) => {
+app.post('/webhook/whatsapp/inbound', async (req, res) => {
   try {
-    console.log(`✅ ✅ ✅ WEBHOOK ENDPOINT MATCHED: ${req.path} ✅ ✅ ✅`);
+    console.log(`✅ ✅ ✅ INBOUND MESSAGES WEBHOOK MATCHED ✅ ✅ ✅`);
     console.log('📨 Processing incoming webhook...');
     console.log('   Body keys:', Object.keys(req.body));
     console.log('   Has results?', !!req.body.results);
@@ -125,12 +124,30 @@ app.post(['/webhook/whatsapp', '/'], async (req, res) => {
 // Process incoming message
 async function processIncomingMessage(message) {
   try {
+    // Validate this is an actual inbound message
+    if (!message.from || !message.message || !message.message.type) {
+      console.log(`   ⏭️  Skipping non-message webhook (missing required fields)`);
+      return;
+    }
+    
+    // Only process WhatsApp inbound messages
+    if (message.integrationType && message.integrationType !== 'WHATSAPP') {
+      console.log(`   ⏭️  Skipping non-WhatsApp message: ${message.integrationType}`);
+      return;
+    }
+    
     // Parse new message format
-    const messageType = message.message?.type;
+    const messageType = message.message.type;
     const senderPhone = message.from; // Sender's phone number (e.g., "385912395365")
     const recipientPhone = message.to; // Our WhatsApp number (e.g., "385916376631")
     const messageId = message.messageId;
     const contactName = message.contact?.name || 'Unknown';
+    
+    // Validate required fields
+    if (!senderPhone || !messageType || !messageId) {
+      console.log(`   ⏭️  Skipping message with missing required fields`);
+      return;
+    }
     
     console.log(`\n📱 Message received:`);
     console.log(`   From: ${senderPhone} (${contactName})`);
@@ -241,17 +258,17 @@ app.use((req, res) => {
     console.log(`   Body:`, JSON.stringify(req.body, null, 2));
   }
   console.log(`\n💡 Available routes:`);
-  console.log(`   POST /webhook/whatsapp`);
-  console.log(`   POST /webhook/delivery`);
-  console.log(`   POST /webhook/seen`);
-  console.log(`   GET /health`);
+  console.log(`   POST /webhook/whatsapp/inbound (for inbound messages)`);
+  console.log(`   POST /webhook/delivery (for delivery reports)`);
+  console.log(`   POST /webhook/seen (for seen reports)`);
+  console.log(`   GET /health (health check)`);
   console.log(`${'='.repeat(80)}\n`);
   
   res.status(404).json({
     error: 'Not Found',
     message: `Route ${req.method} ${req.path} not found`,
     availableRoutes: [
-      'POST /webhook/whatsapp',
+      'POST /webhook/whatsapp/inbound',
       'POST /webhook/delivery',
       'POST /webhook/seen',
       'GET /health'
@@ -262,7 +279,9 @@ app.use((req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 WhatsApp Webhook Server running on port ${PORT}`);
-  console.log(`📍 Webhook URL: http://localhost:${PORT}/webhook/whatsapp`);
+  console.log(`📍 Inbound Messages: http://localhost:${PORT}/webhook/whatsapp/inbound`);
+  console.log(`📍 Delivery Reports: http://localhost:${PORT}/webhook/delivery`);
+  console.log(`📍 Seen Reports: http://localhost:${PORT}/webhook/seen`);
   console.log(`🏥 Health check: http://localhost:${PORT}/health`);
   console.log(`\n⚙️  Configuration:`);
   console.log(`   Sender: ${process.env.WHATSAPP_SENDER}`);
