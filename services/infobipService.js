@@ -18,31 +18,93 @@ class InfobipService {
 
   /**
    * Send a text message via WhatsApp
+   * Matches the Infobip API format: https://www.infobip.com/docs/api#channels/whatsapp/send-whatsapp-text-message
+   * 
+   * @param {string} to - Recipient phone number (e.g., "385912395365" or "+385912395365")
+   * @param {string} text - Message text content
+   * @param {Object} options - Optional parameters
+   * @param {string} options.messageId - Custom message ID (auto-generated if not provided)
+   * @param {string} options.callbackData - Callback data for delivery reports
+   * @param {string} options.notifyUrl - URL for delivery notifications
+   * @returns {Promise<Object>} - API response
    */
-  async sendTextMessage(to, text) {
+  async sendTextMessage(to, text, options = {}) {
     try {
+      // Generate message ID if not provided
+      const messageId = options.messageId || this.generateMessageId();
+      
+      // Format phone number (ensure it has + prefix for international format)
+      const formattedTo = this.formatPhoneNumber(to);
+      
       const payload = {
         from: WHATSAPP_SENDER,
-        to: to,
+        to: formattedTo,
+        messageId: messageId,
         content: {
           text: text
         }
       };
 
-      console.log(`\n📤 Sending message to ${to}...`);
+      // Add optional fields if provided
+      if (options.callbackData) {
+        payload.callbackData = options.callbackData;
+      }
+
+      if (options.notifyUrl) {
+        payload.notifyUrl = options.notifyUrl;
+      }
+
+      if (options.urlOptions) {
+        payload.urlOptions = options.urlOptions;
+      }
+
+      console.log(`\n📤 Sending message to ${formattedTo}...`);
+      console.log(`   Message ID: ${messageId}`);
       
       const response = await this.client.post(
         '/whatsapp/1/message/text',
         payload
       );
 
-      console.log(`✅ Message sent! ID: ${response.data.messageId}`);
+      console.log(`✅ Message sent! ID: ${response.data.messageId || messageId}`);
+      console.log(`   Status: ${response.data.status?.name || 'Unknown'}`);
+      
       return response.data;
 
     } catch (error) {
       console.error('❌ Error sending message:', error.response?.data || error.message);
+      if (error.response?.data) {
+        console.error('   Details:', JSON.stringify(error.response.data, null, 2));
+      }
       throw error;
     }
+  }
+
+  /**
+   * Generate a unique message ID
+   * @returns {string} - UUID-like message ID
+   */
+  generateMessageId() {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Format phone number for Infobip API
+   * Ensures proper international format
+   * @param {string} phone - Phone number (with or without +)
+   * @returns {string} - Formatted phone number
+   */
+  formatPhoneNumber(phone) {
+    // Remove any whitespace
+    let formatted = phone.trim();
+    
+    // If it doesn't start with +, add it (assuming international format)
+    // Note: Infobip may accept numbers with or without +, but + is standard
+    if (!formatted.startsWith('+')) {
+      formatted = `+${formatted}`;
+    }
+    
+    return formatted;
   }
 
   /**

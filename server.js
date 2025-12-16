@@ -48,11 +48,16 @@ app.post('/webhook/whatsapp', async (req, res) => {
 // Process incoming message
 async function processIncomingMessage(message) {
   try {
+    // Parse new message format
     const messageType = message.message?.type;
-    const from = message.from;
+    const senderPhone = message.from; // Sender's phone number (e.g., "385912395365")
+    const recipientPhone = message.to; // Our WhatsApp number (e.g., "385916376631")
     const messageId = message.messageId;
+    const contactName = message.contact?.name || 'Unknown';
     
-    console.log(`\n📱 Message received from: ${from}`);
+    console.log(`\n📱 Message received:`);
+    console.log(`   From: ${senderPhone} (${contactName})`);
+    console.log(`   To: ${recipientPhone}`);
     console.log(`   Type: ${messageType}`);
     console.log(`   Message ID: ${messageId}`);
 
@@ -61,38 +66,48 @@ async function processIncomingMessage(message) {
     
     switch (messageType) {
       case 'TEXT':
-        messageContent = message.message.text;
+        messageContent = message.message.text || '';
         console.log(`   Content: ${messageContent}`);
         break;
       case 'IMAGE':
         messageContent = '[Image received]';
-        console.log(`   Image URL: ${message.message.url}`);
+        if (message.message.url) {
+          console.log(`   Image URL: ${message.message.url}`);
+        }
         break;
       case 'DOCUMENT':
         messageContent = '[Document received]';
-        console.log(`   Document URL: ${message.message.url}`);
+        if (message.message.url) {
+          console.log(`   Document URL: ${message.message.url}`);
+        }
         break;
       case 'AUDIO':
         messageContent = '[Audio received]';
-        console.log(`   Audio URL: ${message.message.url}`);
+        if (message.message.url) {
+          console.log(`   Audio URL: ${message.message.url}`);
+        }
         break;
       case 'VIDEO':
         messageContent = '[Video received]';
-        console.log(`   Video URL: ${message.message.url}`);
+        if (message.message.url) {
+          console.log(`   Video URL: ${message.message.url}`);
+        }
         break;
       case 'LOCATION':
         messageContent = '[Location received]';
-        console.log(`   Location: ${message.message.latitude}, ${message.message.longitude}`);
+        if (message.message.latitude && message.message.longitude) {
+          console.log(`   Location: ${message.message.latitude}, ${message.message.longitude}`);
+        }
         break;
       case 'CONTACT':
         messageContent = '[Contact received]';
         break;
       case 'BUTTON':
-        messageContent = message.message.text || message.message.payload;
+        messageContent = message.message.text || message.message.payload || '';
         console.log(`   Button: ${messageContent}`);
         break;
       case 'LIST':
-        messageContent = message.message.title || message.message.description;
+        messageContent = message.message.title || message.message.description || '';
         console.log(`   List reply: ${messageContent}`);
         break;
       default:
@@ -100,10 +115,15 @@ async function processIncomingMessage(message) {
         console.log(`   Unsupported type: ${messageType}`);
     }
 
-    // 🤖 PLACEHOLDER: Add your bot logic here
-    // This is where you would integrate Claude API or your custom logic
+    // Only process TEXT messages for now (or handle other types as needed)
+    if (messageType !== 'TEXT' || !messageContent.trim()) {
+      console.log(`   ⏭️  Skipping non-text message or empty content`);
+      return;
+    }
+
+    // Generate AI response using OpenAI GPT-4
     const response = await messageHandler.handleMessage({
-      from: from,
+      from: senderPhone,
       content: messageContent,
       type: messageType,
       messageId: messageId,
@@ -112,7 +132,7 @@ async function processIncomingMessage(message) {
 
     // Send response back via Infobip
     if (response) {
-      await infobipService.sendTextMessage(from, response);
+      await infobipService.sendTextMessage(senderPhone, response);
     }
 
   } catch (error) {
