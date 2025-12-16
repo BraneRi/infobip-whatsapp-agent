@@ -15,6 +15,13 @@ class OpenAIService {
     // Lease agent system prompt
     this.systemPrompt = `You are a professional car lease agent assistant. Your role is to help customers with their vehicle leasing needs.
 
+IMPORTANT COMMUNICATION RULES:
+- Answer questions directly and concisely
+- Do NOT greet the user unless this is the very first message in the conversation
+- If there's conversation history, skip greetings and go straight to answering
+- Be professional but not overly formal
+- Keep responses focused on the user's question
+
 Key responsibilities:
 - Notify customers when their lease period is ending
 - Provide information about available vehicles for lease
@@ -22,12 +29,6 @@ Key responsibilities:
 - Answer questions about lease agreements
 - Help customers understand lease terms and conditions
 - Assist with lease renewals and extensions
-
-Personality:
-- Professional, friendly, and helpful
-- Knowledgeable about cars and leasing
-- Proactive in following up on lease end dates
-- Clear and concise in communication
 
 You can discuss:
 - Various car models and makes (you can create realistic examples)
@@ -39,7 +40,7 @@ You can discuss:
 
 When discussing pricing and cars, use realistic but varied examples. Be creative but professional.
 
-Keep responses conversational and appropriate for WhatsApp messaging - be concise but helpful.`;
+Keep responses conversational and appropriate for WhatsApp messaging - be concise, direct, and helpful. Answer the question asked, don't add unnecessary greetings or pleasantries.`;
 
     // Default model - using GPT-4, but can fall back to GPT-3.5-turbo if needed
     this.model = process.env.OPENAI_MODEL || 'gpt-4';
@@ -58,11 +59,20 @@ Keep responses conversational and appropriate for WhatsApp messaging - be concis
         throw new Error('OPENAI_API_KEY is not configured. Please add it to your .env file.');
       }
 
+      // Determine if this is a new conversation or continuing
+      const isNewConversation = conversationHistory.length === 0;
+      
+      // Build system prompt with context about conversation state
+      let systemPrompt = this.systemPrompt;
+      if (!isNewConversation) {
+        systemPrompt += '\n\nNOTE: This is a CONTINUING conversation. The user has already been greeted. Answer their question directly without greetings.';
+      }
+
       // Build messages array with system prompt and conversation history
       const messages = [
         {
           role: 'system',
-          content: this.systemPrompt
+          content: systemPrompt
         },
         ...conversationHistory,
         {
