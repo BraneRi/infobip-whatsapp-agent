@@ -1,0 +1,99 @@
+name: Push-to-EC2
+on:
+  push:
+    branches: ['main']
+jobs:
+  deploy:
+    name: Push to EC2 Instance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: Deploy files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./"
+          target: "/home/ec2-user/whatsapp-bot"
+          rm: true
+      
+      - name: Create .env file on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Ensure directory exists
+            mkdir -p /home/ec2-user/whatsapp-bot
+            cd /home/ec2-user/whatsapp-bot
+            # Remove any existing .env file
+            rm -f .env
+            # Create .env file from GitHub Secrets
+            cat > .env << EOF
+            INFOBIP_API_KEY=${{ secrets.INFOBIP_API_KEY }}
+            INFOBIP_BASE_URL=${{ secrets.INFOBIP_BASE_URL }}
+            WHATSAPP_SENDER=${{ secrets.WHATSAPP_SENDER }}
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            OPENAI_MODEL=${{ secrets.OPENAI_MODEL }}
+            PORT=${{ secrets.PORT }}
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            EOF
+            # Set secure permissions for .env file (read/write for owner only)
+            chmod 600 .env
+            # Verify .env file was created successfully
+            if [ ! -f .env ]; then
+              echo "❌ Error: .env file was not created"
+              exit 1
+            fi
+            echo "✅ .env file created successfully with secure permissions"
+            echo "📋 Environment variables configured:"
+            echo "   - INFOBIP_API_KEY: [CONFIGURED]"
+            echo "   - INFOBIP_BASE_URL: ${{ secrets.INFOBIP_BASE_URL }}"
+            echo "   - WHATSAPP_SENDER: ${{ secrets.WHATSAPP_SENDER }}"
+            echo "   - OPENAI_API_KEY: [CONFIGURED]"
+            echo "   - OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}"
+            echo "   - PORT: ${{ secrets.PORT }}"
+            echo "   - NODE_ENV: ${{ secrets.NODE_ENV }}"
+      
+      - name: Build and restart bot app on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/whatsapp-bot
+            # Install dependencies with error handling
+            echo "📦 Installing dependencies..."
+            npm install || {
+              echo "❌ Error: npm install failed"
+              exit 1
+            }
+            # Ensure PM2 is installed
+            if ! command -v pm2 &> /dev/null; then
+              echo "📦 Installing PM2..."
+              npm install -g pm2 || {
+                echo "❌ Error: Failed to install PM2"
+                exit 1
+              }
+            fi
+            # Start/restart with pm2 (consistent process name)
+            echo "🔄 Restarting application with PM2..."
+            pm2 restart whatsapp-bot || pm2 start "npm run start" --name whatsapp-bot || {
+              echo "❌ Error: Failed to start/restart application with PM2"
+              exit 1
+            }
+            # Save PM2 process list
+            pm2 save || true
+            echo "✅ Application deployed and running"

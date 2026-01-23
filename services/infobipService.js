@@ -4,8 +4,30 @@ const INFOBIP_API_KEY = process.env.INFOBIP_API_KEY;
 const INFOBIP_BASE_URL = process.env.INFOBIP_BASE_URL || 'https://api.infobip.com';
 const WHATSAPP_SENDER = process.env.WHATSAPP_SENDER;
 
+// Validate configuration at startup
+if (!INFOBIP_API_KEY) {
+  console.error('❌ ERROR: INFOBIP_API_KEY is not set in environment variables');
+  console.error('   Please set INFOBIP_API_KEY in your .env file or environment');
+  console.error('   Example: INFOBIP_API_KEY=your_api_key_here');
+}
+
+if (!WHATSAPP_SENDER) {
+  console.warn('⚠️  WARNING: WHATSAPP_SENDER is not set in environment variables');
+  console.warn('   This is required for sending WhatsApp messages');
+}
+
 class InfobipService {
   constructor() {
+    // Validate API key before creating client
+    if (!INFOBIP_API_KEY) {
+      throw new Error('INFOBIP_API_KEY is required but not configured. Please set it in your .env file.');
+    }
+
+    // Validate API key format (Infobip API keys are typically long alphanumeric strings)
+    if (INFOBIP_API_KEY.length < 20) {
+      console.warn('⚠️  WARNING: INFOBIP_API_KEY seems unusually short. Please verify it is correct.');
+    }
+
     this.client = axios.create({
       baseURL: INFOBIP_BASE_URL,
       headers: {
@@ -14,6 +36,11 @@ class InfobipService {
         'Accept': 'application/json'
       }
     });
+
+    console.log('✅ InfobipService initialized');
+    console.log(`   Base URL: ${INFOBIP_BASE_URL}`);
+    console.log(`   API Key: ${INFOBIP_API_KEY ? `${INFOBIP_API_KEY.substring(0, 10)}...${INFOBIP_API_KEY.substring(INFOBIP_API_KEY.length - 4)}` : 'NOT SET'}`);
+    console.log(`   WhatsApp Sender: ${WHATSAPP_SENDER || 'NOT SET'}`);
   }
 
   /**
@@ -72,9 +99,23 @@ class InfobipService {
       return response.data;
 
     } catch (error) {
-      console.error('❌ Error sending message:', error.response?.data || error.message);
-      if (error.response?.data) {
-        console.error('   Details:', JSON.stringify(error.response.data, null, 2));
+      // Enhanced error handling for authentication issues
+      if (error.response?.status === 401) {
+        console.error('❌ Authentication Error (401 Unauthorized)');
+        console.error('   The Infobip API key is invalid, expired, or does not have the required permissions.');
+        console.error('   Please check:');
+        console.error('   1. INFOBIP_API_KEY is correct in your .env file or environment variables');
+        console.error('   2. The API key has not expired');
+        console.error('   3. The API key has WhatsApp API permissions enabled');
+        console.error('   4. You are using the correct API key for your Infobip account');
+        if (error.response?.data) {
+          console.error('   API Response:', JSON.stringify(error.response.data, null, 2));
+        }
+      } else {
+        console.error('❌ Error sending message:', error.response?.data || error.message);
+        if (error.response?.data) {
+          console.error('   Details:', JSON.stringify(error.response.data, null, 2));
+        }
       }
       throw error;
     }

@@ -37,6 +37,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Import handlers
 const messageHandler = require('./handlers/messageHandler');
+
+// Validate environment variables before importing services
+if (!process.env.INFOBIP_API_KEY) {
+  console.error('\n❌ CRITICAL ERROR: INFOBIP_API_KEY is not set!');
+  console.error('   Please set INFOBIP_API_KEY in your .env file or environment variables.');
+  console.error('   Example: INFOBIP_API_KEY=your_api_key_here\n');
+  process.exit(1);
+}
+
+if (!process.env.WHATSAPP_SENDER) {
+  console.warn('\n⚠️  WARNING: WHATSAPP_SENDER is not set!');
+  console.warn('   This is required for sending WhatsApp messages.');
+  console.warn('   Example: WHATSAPP_SENDER=385916376631\n');
+}
+
 const infobipService = require('./services/infobipService');
 
 // Track processed message IDs to prevent duplicate processing
