@@ -1,4 +1,6 @@
 const OpenAI = require('openai');
+const fs = require('fs');
+const path = require('path');
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -11,6 +13,9 @@ class OpenAIService {
     this.client = new OpenAI({
       apiKey: OPENAI_API_KEY
     });
+    
+    // Load attendees and speakers from JSON
+    this.attendeesSpeakersData = this.loadAttendeesSpeakers();
     
     // Lease agent system prompt
     this.systemPrompt = `
@@ -40,6 +45,13 @@ The event is an exclusive networking evening for professionals living in Switzer
 * **IT Professionals:** Tech innovators and digital pioneers.
 * **Academia:** Researchers and professors from top Swiss institutions.
 * **Business Leaders:** Executives and entrepreneurs.
+
+**Attendees & Speakers:**
+
+* Check grammasr when pulling company info - might contain misspells
+* It is OK to check additional data about company or person onlin - but ALWAYS state that you retrieved info that way
+
+${this.formatAttendeesSpeakers()}
 
 ---
 
@@ -83,6 +95,85 @@ The site addresses common inquiries including:
 
     // Default model - using GPT-4, but can fall back to GPT-3.5-turbo if needed
     this.model = process.env.OPENAI_MODEL || 'gpt-4';
+  }
+
+  /**
+   * Load attendees and speakers data from JSON file
+   * @returns {Object} - Object containing the full JSON data
+   */
+  loadAttendeesSpeakers() {
+    try {
+      const dataPath = path.join(__dirname, '..', 'data', 'attendees-speakers.json');
+      const data = fs.readFileSync(dataPath, 'utf8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.warn('⚠️  Could not load attendees-speakers.json, using empty data:', error.message);
+      return { members: [] };
+    }
+  }
+
+  /**
+   * Format attendees and speakers data for the prompt
+   * @returns {string} - Formatted string for the prompt
+   */
+  formatAttendeesSpeakers() {
+    const { members } = this.attendeesSpeakersData || {};
+    if (!members || !Array.isArray(members) || members.length === 0) {
+      return '\n(No attendees or speakers listed yet.)\n';
+    }
+
+    // Filter members by roles
+    const speakers = members.filter(member => 
+      member.roles && Array.isArray(member.roles) && member.roles.includes('Speaker')
+    );
+    
+    // All other members (excluding Advisory Board, Event Team, Co-Founders, Partnerships) as attendees
+    const attendees = members.filter(member => {
+      if (!member.roles || !Array.isArray(member.roles)) return true;
+      return !member.roles.some(role => 
+        role === 'Speaker' || 
+        role === 'Advisory Board' || 
+        role === 'Event Team' || 
+        role.includes('Co-Founder') || 
+        role.includes('Partnerships')
+      );
+    });
+
+    let formatted = '';
+
+    if (speakers.length > 0) {
+      formatted += '\n**Speakers:**\n';
+      speakers.forEach(member => {
+        formatted += `* **${member.name}**`;
+        if (member.current_title) {
+          formatted += `: ${member.current_title}`;
+        }
+        if (member.current_org) {
+          formatted += ` at ${member.current_org}`;
+        }
+        formatted += '\n';
+      });
+    }
+
+    if (attendees.length > 0) {
+      formatted += '\n**Attendees:**\n';
+      attendees.forEach(member => {
+        formatted += `* **${member.name}**`;
+        if (member.current_title) {
+          formatted += `: ${member.current_title}`;
+        }
+        if (member.current_org) {
+          formatted += ` at ${member.current_org}`;
+        }
+        formatted += '\n';
+      });
+    }
+
+    if (!formatted) {
+      formatted = '\n(No attendees or speakers listed yet.)\n';
+    }
+
+    return formatted;
   }
 
   /**

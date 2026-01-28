@@ -1,0 +1,904 @@
+{
+  "network": "ZajednoSwiss",
+  "members_total": 76,
+  "members": [
+    {
+      "name": "Haris Piplaš",
+      "current_title": "Director Integrated Urban Solutions International",
+      "current_org": "Drees & Sommer",
+      "previous_experience": [
+        "ex: TU Berlin"
+      ],
+      "education": [
+        "Dr. sc. & Docent - ETH Zürich"
+      ],
+      "roles": [
+        "Speaker",
+        "Advisory Board"
+      ],
+      "notes": [
+        "World Economic Forum 2026"
+      ]
+    },
+    {
+      "name": "Ivan Sicaja",
+      "current_title": "Senior Robotics Engineer | Research and Development Engineer",
+      "current_org": null,
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Merima Hafizović",
+      "current_title": "Senior EHS - Environment, Health & Safety",
+      "current_org": "The Estée Lauder Companies",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Visnja Katalinic",
+      "current_title": "Strategy Consultant | Teacher",
+      "current_org": "Freelance",
+      "previous_experience": [
+        "Ex: Sanofi",
+        "McKinsey",
+        "Abolon"
+      ],
+      "education": [
+        "MIT",
+        "University of Chicago PhD"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Jasmin Tajić",
+      "current_title": "Corporate Client Adviser",
+      "current_org": "Zurich Insurance",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Igor Matić",
+      "current_title": "Senior Investment Lead and Senior Member of Management",
+      "current_org": "Partners Group",
+      "previous_experience": [
+        "Prev. Citi",
+        "Merryl Lynch",
+        "Canaris"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Krisztina Marković",
+      "current_title": "QS",
+      "current_org": "Fresh Food & Beverage Group AG",
+      "previous_experience": [
+        "Prev. JOWA"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Matea Sršen",
+      "current_title": "Chemist",
+      "current_org": "Dottikon Exclusive Synthesis AG",
+      "previous_experience": [],
+      "education": [
+        "Prev. Uni. of Copenhagen",
+        "Kyoto University",
+        "Columbia University"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dušan Mladenović",
+      "current_title": "Founder & Principal Consultant",
+      "current_org": "Dinkoga GmbH",
+      "previous_experience": [
+        "Prev. Schindler Elevators Ltd.",
+        "ABB Switzerland Ltd.",
+        "Mitsubishi Electric Corporation"
+      ],
+      "education": [
+        "ETH Zurich MSc"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Tomislav Medić",
+      "current_title": "Postdoctoral Researcher",
+      "current_org": "ETH Zurich",
+      "previous_experience": [
+        "Prev. University of Bonn"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Petra Andrenšek",
+      "current_title": "Founder, Musician",
+      "current_org": "Voice of Petra",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "Speaker"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Ivan Ilijašić",
+      "current_title": "CEO, Founder",
+      "current_org": "ViagemIT | Orioly Inc.",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Aleksa Micanovic",
+      "current_title": "Master Student, Teaching Assistant",
+      "current_org": "ETH Zurich | ETH Cyber Group",
+      "previous_experience": [
+        "Prev. Microsoft",
+        "Texas A&M University"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Elma Gromilić",
+      "current_title": "Personal Assistant",
+      "current_org": "Swiss Parliament",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Haris Skaljic",
+      "current_title": "Banking Analyst",
+      "current_org": "U.S. Bank",
+      "previous_experience": [
+        "Prev. PNC",
+        "ZiraatBank",
+        "State Court of Justice"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Miloš Šormaz",
+      "current_title": "Product Manager, AVI & Spectroscopy",
+      "current_org": "Wilco",
+      "previous_experience": [
+        "Prev. medmix",
+        "Leica Microsystems",
+        "X-Rite"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Aleksandar Todorović",
+      "current_title": "Divisional CTO",
+      "current_org": "Swisscom",
+      "previous_experience": [
+        "Prev. EY",
+        "Avanade",
+        "KPMG Switzerland"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Marija Novaković",
+      "current_title": "Country Sales Director",
+      "current_org": "Ecolab",
+      "previous_experience": [
+        "Prev. Hilti",
+        "Siemens"
+      ],
+      "education": [
+        "TU Wien",
+        "WU Executive Academy",
+        "UMN Carlson School of Mngmt."
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Kruna Janjić",
+      "current_title": "Head General & Regulatory Legal Services",
+      "current_org": "AXA",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Vedran Golec",
+      "current_title": "Gym Manager",
+      "current_org": "movemi AG | Activ Fitnes",
+      "previous_experience": [
+        "Prev. HolmesPlace Switzerland"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Andrej Ilievski",
+      "current_title": "Data Analyst",
+      "current_org": "DeinDeal AG",
+      "previous_experience": [
+        "Prev. BMW",
+        "UZH",
+        "University of Ljubljana"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Una Hügli",
+      "current_title": "Core Developer PMO",
+      "current_org": "Google",
+      "previous_experience": [
+        "Prev. Swarovski",
+        "UBS",
+        "Google DeepMind"
+      ],
+      "education": [],
+      "roles": [
+        "Speaker"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Tahir Mavrić",
+      "current_title": "Founder, CEO",
+      "current_org": "3Dexperts.ch",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Igor Dakić",
+      "current_title": "Manager",
+      "current_org": "MMG Managment Consulting",
+      "previous_experience": [
+        "Prev. ETH Zurich",
+        "AFRY",
+        "EuroTube"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Ahmed Malanović",
+      "current_title": "Master Student Cyber Security",
+      "current_org": "ETH Zurich, EPFL | ETH Cyber Group",
+      "previous_experience": [
+        "WS @ Siemens"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dr. Šejla Hodžić",
+      "current_title": "Executive Director, International Medical Affairs - Breast Cancer",
+      "current_org": "Novartis",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Radovan Simić",
+      "current_title": "Director, Data & Digital",
+      "current_org": "Bayer",
+      "previous_experience": [
+        "Prev. Novartis",
+        "Manor",
+        "EY"
+      ],
+      "education": [
+        "Lecturer at FHNW"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Jovana Dragas",
+      "current_title": "Architect, Project Lead",
+      "current_org": "Curzio Ardinghi Architecture",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Vanja Jeršek",
+      "current_title": "Director of Business Development",
+      "current_org": "Infinum",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Branimir Akmadža",
+      "current_title": "AI & Data Engineering Team Director",
+      "current_org": "Infinum",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "Speaker"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Dr. med. Ivana Andrejević",
+      "current_title": "Oberärztin Psychiatrie",
+      "current_org": "ARUD Zürich",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Boris Vuksa",
+      "current_title": "Finance Expert",
+      "current_org": "BV Wealth Management",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Maja Pavlek",
+      "current_title": "Education Lead, Aesthetics & Reconstruction",
+      "current_org": "Johnson & Johnson",
+      "previous_experience": [
+        "Prev. Lumenis",
+        "Ferrero"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Branka Stanojević",
+      "current_title": "Strategic Advisor - Digital SC and AI",
+      "current_org": "NB CRETUM d.o.o.",
+      "previous_experience": [
+        "Prev. Merck Sharp & Dohme"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Goran Zečević",
+      "current_title": "Senior Financial Controller",
+      "current_org": "Helvetia Versicherungen Schweiz",
+      "previous_experience": [
+        "Prev. Zurich Insurance",
+        "THOMAS SABO",
+        "Deloitte"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Mario Janković",
+      "current_title": "Innovation & Ventures Associate",
+      "current_org": "Axpo Group",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dr. Amela Jusić",
+      "current_title": "Program Leader",
+      "current_org": "Quant Biomarkers",
+      "previous_experience": [],
+      "education": [
+        "Prev. University of Tuzla"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Andreo Crnjac",
+      "current_title": "Postdoctoral Reseracher",
+      "current_org": "ETH Zurich",
+      "previous_experience": [
+        "Prev. University of Zagreb"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Marko Mladenović",
+      "current_title": "Senior Researcher",
+      "current_org": "ETH Zurich",
+      "previous_experience": [
+        "Prev. EPFL",
+        "University of Belgrade"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Teodora Vuković",
+      "current_title": "Researcher, Group Lead",
+      "current_org": "University of Zurich",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Hrvoje Zvonarević",
+      "current_title": "IT DevOps Engineer",
+      "current_org": "Swisscom",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dragana Avramović",
+      "current_title": "Founder",
+      "current_org": "FIDAI",
+      "previous_experience": [
+        "Prev. Roche",
+        "Novartis",
+        "Sanofi"
+      ],
+      "education": [
+        "Paul Scherrer Institute PSI",
+        "University of Basel PhD"
+      ],
+      "roles": [],
+      "notes": [
+        "World Economic Forum 2026"
+      ]
+    },
+    {
+      "name": "Milan Vucelic",
+      "current_title": "Project Planner, Cost Specialist",
+      "current_org": "ABB Switzerland",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Kristina Jovanovska",
+      "current_title": "Cyber Defense Group Manager",
+      "current_org": "Avanade",
+      "previous_experience": [
+        "Prev. Accenture"
+      ],
+      "education": [
+        "Harvard Business School",
+        "TU Graz"
+      ],
+      "roles": [],
+      "notes": [
+        "Global Council for Responsible AI",
+        "World Economic Forum 2026"
+      ]
+    },
+    {
+      "name": "Mladen Šošić",
+      "current_title": "Head of Global Engineering & Property Solutions",
+      "current_org": "Helvetia Versicherungen Schweiz",
+      "previous_experience": [
+        "Ex: Nationale Suisse",
+        "Swiss Re"
+      ],
+      "education": [
+        "Executive MBA St. Gallen"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Husref-Pasa Nasic",
+      "current_title": "Business Manager",
+      "current_org": "fortil",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Leon Begić",
+      "current_title": "Group Director of Business Sales",
+      "current_org": "Maistra Hospitality Group",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "Speaker"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Jelena Jović",
+      "current_title": "Business Development Manager",
+      "current_org": "SHL Medical",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Branka Šošić",
+      "current_title": "Psychiatrist",
+      "current_org": null,
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dr. med. Tatjana Bubanj Somborski",
+      "current_title": "CEO",
+      "current_org": "Praxis ST Med GmbH",
+      "previous_experience": [],
+      "education": [
+        "ETH Zurich",
+        "University of Basel",
+        "University of Paris"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Ilija Ivanovski",
+      "current_title": "CEO",
+      "current_org": "Queen Bee GmbH",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Natasa Piljagic",
+      "current_title": "Case Manager",
+      "current_org": "Health & Medical Service AG",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dejan Georgiev",
+      "current_title": "Founder, Co-Founder | Software Engineering Consultant",
+      "current_org": "Uliasti | Advanzo",
+      "previous_experience": [
+        "Prev. SIX"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Franko Vrhovac",
+      "current_title": "Investment Manager",
+      "current_org": "Emerald Technology Ventures",
+      "previous_experience": [
+        "Prev. Bosch"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dragan Milenkovski",
+      "current_title": "Co-Founder",
+      "current_org": "Cydd",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Marija Lugar",
+      "current_title": "PhD Student",
+      "current_org": "University of Zurich",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Mario Stipetic",
+      "current_title": "Founder, Product Manager, Designer",
+      "current_org": "SuperSuper",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Jelena Milošević",
+      "current_title": "Professor for Generative AI",
+      "current_org": "FHNW",
+      "previous_experience": [
+        "Prev. Yokoy",
+        "TU Wien",
+        "University of Lugano",
+        "Intel",
+        "IBM"
+      ],
+      "education": [],
+      "roles": [
+        "Speaker"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Gajo Maksimović",
+      "current_title": "Business Development Manager",
+      "current_org": "OVD Kinegram AG",
+      "previous_experience": [
+        "Prev. Bosch",
+        "SICPA",
+        "NielsenIQ",
+        "Swissport"
+      ],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Dragan Coric",
+      "current_title": "Patent Counsel",
+      "current_org": "Phillip Morris International",
+      "previous_experience": [],
+      "education": [
+        "EPFL PhD"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Omer Mujanović",
+      "current_title": "CEO",
+      "current_org": "Alcom AG",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Jaško Husinović",
+      "current_title": "COO",
+      "current_org": "Billenium",
+      "previous_experience": [
+        "ex: Microsoft",
+        "Amazon",
+        "Proctor & Gamble",
+        "Deutsche Bank",
+        "Beiersdorf"
+      ],
+      "education": [
+        "WHU School of Management"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Stefan Teodorović",
+      "current_title": "Senior Cloud Sales Executive",
+      "current_org": "Oracle",
+      "previous_experience": [
+        "ex: Lidl Internatinal"
+      ],
+      "education": [
+        "DHBW",
+        "Uni California"
+      ],
+      "roles": [],
+      "notes": []
+    },
+    {
+      "name": "Ramo Prošić",
+      "current_title": "Head of PMO",
+      "current_org": "Netstal Maschinen AG",
+      "previous_experience": [],
+      "education": [],
+      "roles": [],
+      "notes": [
+        "Kanton Zürich - Examiner for Polytechnicians"
+      ]
+    },
+    {
+      "name": "Marko Skenderović",
+      "current_title": "Co-Founder",
+      "current_org": "Swiss AI Venture",
+      "previous_experience": [
+        "Ex: AXA",
+        "Daimler",
+        "FESTO",
+        "ResearchGate",
+        "Babbel",
+        "TEDx"
+      ],
+      "education": [],
+      "roles": [
+        "ZajednoSwiss Co-Founder"
+      ],
+      "notes": [
+        "World Economic Forum 2026"
+      ]
+    },
+    {
+      "name": "Marina Veraja",
+      "current_title": "Key Account Manager",
+      "current_org": "Aristo Group AG",
+      "previous_experience": [
+        "Ex: Booking.com",
+        "TEDx"
+      ],
+      "education": [],
+      "roles": [
+        "Event Team"
+      ],
+      "notes": [
+        "Life science | Medical devices"
+      ]
+    },
+    {
+      "name": "Lukman Aščić",
+      "current_title": "Master student Informatics | Lecturer at Zurich University of the Arts",
+      "current_org": "University of Zurich",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "Event Team"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Matej Varga",
+      "current_title": "Owner at ScanBIM, Geomatics and Surveying | Postdoc at ETH Zürich | Univ. Assist. Prof.",
+      "current_org": "ScanBIM",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "ZajednoSwiss Co-Founder"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Andrea Šipić",
+      "current_title": "Strategy Senior Manager",
+      "current_org": "Accenture",
+      "previous_experience": [],
+      "education": [],
+      "roles": [
+        "Advisory Board"
+      ],
+      "notes": [
+        "Banking & Capital Markets | Business Transformation & Growth Strategy"
+      ]
+    },
+    {
+      "name": "Helena Peić Tukuljac",
+      "current_title": "Senior Data Scientist and Architect | AI Leader and Strategist",
+      "current_org": null,
+      "previous_experience": [],
+      "education": [
+        "Data science EPFL",
+        "PhD",
+        "Embedded systems MSc"
+      ],
+      "roles": [
+        "Advisory Board"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Siniša Matetić",
+      "current_title": "Head of Technology & Portfolio Development | Program Director",
+      "current_org": "Swiss Post",
+      "previous_experience": [],
+      "education": [
+        "Dr. Sc. ETH Zürich",
+        "CAS/MAS ETH in Cyber Security"
+      ],
+      "roles": [
+        "Advisory Board"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Margareta Klinčić Tremac",
+      "current_title": "CIO @ Qodea | Co-Founder and Co-President @ ACBP",
+      "current_org": "Qodea",
+      "previous_experience": [
+        "Ex: Google"
+      ],
+      "education": [
+        "Harvard Business School"
+      ],
+      "roles": [
+        "Partnerships - London"
+      ],
+      "notes": [
+        "Building | Data Analysis | Machine Learning"
+      ]
+    },
+    {
+      "name": "Atila Seke",
+      "current_title": "Department of Nuclear Safety",
+      "current_org": "International Atomic Energy Agency",
+      "previous_experience": [
+        "Ex: Office of UN High Commissioner",
+        "United Nations Drugs & Crime"
+      ],
+      "education": [],
+      "roles": [
+        "Partnerships - Vienna"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Ante Pogačić",
+      "current_title": "Managing Director @ Engelhart | Head of Renewables, EU Power",
+      "current_org": "Engelhart",
+      "previous_experience": [
+        "Ex: Merryl Lunch",
+        "Deutsche Bank"
+      ],
+      "education": [],
+      "roles": [
+        "Partnerships - Berlin"
+      ],
+      "notes": []
+    },
+    {
+      "name": "Igor Čeliković",
+      "current_title": "Deputy Head of Communications Unit",
+      "current_org": "European Commission",
+      "previous_experience": [
+        "Ex: TED Global",
+        "TEDx",
+        "Scanadu"
+      ],
+      "education": [],
+      "roles": [
+        "Partnerships - Brussels"
+      ],
+      "notes": []
+    }
+  ]
+}
