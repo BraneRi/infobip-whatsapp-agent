@@ -74,34 +74,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ec2-user/whatsapp-bot
-            # Ensure ffmpeg is installed (needed for video processing)
-            # Remove broken binary if it exists from a previous bad install
-            if command -v ffmpeg &> /dev/null && ! ffmpeg -version &> /dev/null; then
-              echo "🧹 Removing broken ffmpeg binary..."
-              sudo rm -f "$(which ffmpeg)"
-            fi
-            if ! command -v ffmpeg &> /dev/null; then
-              echo "📦 Installing ffmpeg..."
-              ARCH=$(uname -m)
-              echo "   Architecture: $ARCH"
-              sudo yum install -y ffmpeg 2>/dev/null || sudo dnf install -y ffmpeg 2>/dev/null || sudo amazon-linux-extras install -y ffmpeg 2>/dev/null || {
-                echo "⚠️  Package manager failed, trying static build..."
-                if [ "$ARCH" = "aarch64" ]; then
-                  FFMPEG_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz"
-                else
-                  FFMPEG_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
-                fi
-                echo "   Downloading from: $FFMPEG_URL"
-                curl -L -o /tmp/ffmpeg.tar.xz "$FFMPEG_URL"
-                tar -xf /tmp/ffmpeg.tar.xz -C /tmp
-                sudo cp /tmp/ffmpeg-*-static/ffmpeg /usr/local/bin/
-                sudo chmod +x /usr/local/bin/ffmpeg
-                rm -rf /tmp/ffmpeg*
-              }
-              echo "✅ ffmpeg installed: $(ffmpeg -version | head -1)"
-            else
-              echo "✅ ffmpeg already installed: $(ffmpeg -version | head -1)"
-            fi
             # Install dependencies with error handling
             echo "📦 Installing dependencies..."
             npm install || {

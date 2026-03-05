@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { execSync } = require('child_process');
 const axios = require('axios');
 const OpenAI = require('openai');
 
@@ -18,44 +17,37 @@ class VideoProcessor {
   }
 
   /**
-   * Full pipeline: download video → extract audio → transcribe → detect goal yelling → return result
+   * Full pipeline: download video → send to Whisper → detect goal yelling → return result
    * @param {string} videoUrl - Infobip media URL
    * @returns {Promise<{durationSeconds: number, message: string}>}
    */
   async processGoalVideo(videoUrl) {
     const id = Date.now().toString();
     const videoPath = path.join(this.tmpDir, `${id}.mp4`);
-    const audioPath = path.join(this.tmpDir, `${id}.wav`);
 
     try {
       console.log(`\n⬇️  Downloading video from Infobip...`);
       await this.downloadVideo(videoUrl, videoPath);
 
-      console.log(`🎵 Extracting audio...`);
-      this.extractAudio(videoPath, audioPath);
-
       // Whisper API has a 25MB file size limit
-      const audioSize = fs.statSync(audioPath).size;
-      const audioSizeMB = audioSize / (1024 * 1024);
-      console.log(`   Audio file size: ${audioSizeMB.toFixed(1)} MB`);
-      if (audioSizeMB > 25) {
-        throw new Error(`Audio file too large for Whisper API (${audioSizeMB.toFixed(1)} MB, max 25 MB). Try a shorter video.`);
+      const fileSize = fs.statSync(videoPath).size;
+      const fileSizeMB = fileSize / (1024 * 1024);
+      console.log(`   Video file size: ${fileSizeMB.toFixed(1)} MB`);
+      if (fileSizeMB > 25) {
+        throw new Error(`Video file too large for Whisper API (${fileSizeMB.toFixed(1)} MB, max 25 MB). Try a shorter video.`);
       }
 
-      console.log(`🗣️  Transcribing with Whisper...`);
-      const transcription = await this.transcribeAudio(audioPath);
+      console.log(`🗣️  Transcribing with Whisper (sending mp4 directly)...`);
+      const transcription = await this.transcribeVideo(videoPath);
 
       console.log(`⚽ Detecting goal yelling...`);
       const result = this.detectGoalYelling(transcription);
 
       return result;
     } finally {
-      // Clean up temp files
-      for (const f of [videoPath, audioPath]) {
-        if (fs.existsSync(f)) {
-          fs.unlinkSync(f);
-          console.log(`🧹 Cleaned up ${path.basename(f)}`);
-        }
+      if (fs.existsSync(videoPath)) {
+        fs.unlinkSync(videoPath);
+        console.log(`🧹 Cleaned up ${path.basename(videoPath)}`);
       }
     }
   }
@@ -81,24 +73,15 @@ class VideoProcessor {
   }
 
   /**
-   * Extract audio from video using ffmpeg (mono 16kHz WAV for Whisper)
+   * Transcribe video using OpenAI Whisper with word-level timestamps.
+   * Whisper accepts mp4 directly — no need for ffmpeg audio extraction.
    */
-  extractAudio(videoPath, audioPath) {
-    execSync(
-      `ffmpeg -i "${videoPath}" -vn -acodec pcm_s16le -ar 16000 -ac 1 "${audioPath}" -y`,
-      { stdio: 'pipe' }
-    );
-  }
-
-  /**
-   * Transcribe audio using OpenAI Whisper with word-level timestamps
-   */
-  async transcribeAudio(audioPath) {
-    const audioFile = fs.createReadStream(audioPath);
+  async transcribeVideo(videoPath) {
+    const file = fs.createReadStream(videoPath);
 
     const response = await this.client.audio.transcriptions.create({
       model: 'whisper-1',
-      file: audioFile,
+      file: file,
       response_format: 'verbose_json',
       timestamp_granularities: ['word']
     });
@@ -140,7 +123,6 @@ class VideoProcessor {
       };
     }
 
-    // Calculate total duration from first goal word start to last goal word end
     // Group consecutive goal words into yelling "streaks"
     const streaks = [];
     let currentStreak = { start: goalWords[0].start, end: goalWords[0].end };
