@@ -2,14 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const axios = require('axios');
-const OpenAI = require('openai');
+const FormData = require('form-data');
 
 const INFOBIP_API_KEY = process.env.INFOBIP_API_KEY;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
 class VideoProcessor {
   constructor() {
-    this.client = new OpenAI({ apiKey: OPENAI_API_KEY });
     this.tmpDir = path.join(os.tmpdir(), 'goal-videos');
     if (!fs.existsSync(this.tmpDir)) {
       fs.mkdirSync(this.tmpDir, { recursive: true });
@@ -17,7 +16,7 @@ class VideoProcessor {
   }
 
   /**
-   * Full pipeline: download video → send to Whisper → detect goal yelling → return result
+   * Full pipeline: download video → transcribe with ElevenLabs → detect goal yelling → return result
    * @param {string} videoUrl - Infobip media URL
    * @returns {Promise<{durationSeconds: number, message: string}>}
    */
@@ -29,15 +28,11 @@ class VideoProcessor {
       console.log(`\n⬇️  Downloading video from Infobip...`);
       await this.downloadVideo(videoUrl, videoPath);
 
-      // Whisper API has a 25MB file size limit
       const fileSize = fs.statSync(videoPath).size;
       const fileSizeMB = fileSize / (1024 * 1024);
       console.log(`   Video file size: ${fileSizeMB.toFixed(1)} MB`);
-      if (fileSizeMB > 25) {
-        throw new Error(`Video file too large for Whisper API (${fileSizeMB.toFixed(1)} MB, max 25 MB). Try a shorter video.`);
-      }
 
-      console.log(`🗣️  Transcribing with Whisper (sending mp4 directly)...`);
+      console.log(`🗣️  Transcribing with ElevenLabs Scribe v2...`);
       const transcription = await this.transcribeVideo(videoPath);
 
       console.log(`⚽ Detecting goal yelling...`);
@@ -73,26 +68,41 @@ class VideoProcessor {
   }
 
   /**
-   * Transcribe video using OpenAI Whisper with word-level timestamps.
-   * Whisper accepts mp4 directly — no need for ffmpeg audio extraction.
+   * Transcribe video using ElevenLabs Scribe v2 with word-level timestamps.
+   * Accepts mp4 directly, up to 3GB.
    */
   async transcribeVideo(videoPath) {
-    const file = fs.createReadStream(videoPath);
+    if (!ELEVENLABS_API_KEY) {
+      throw new Error('ELEVENLABS_API_KEY is not configured. Please add it to your .env file.');
+    }
 
-    const response = await this.client.audio.transcriptions.create({
-      model: 'whisper-1',
-      file: file,
-      response_format: 'verbose_json',
-      timestamp_granularities: ['word']
-    });
+    const form = new FormData();
+    form.append('file', fs.createReadStream(videoPath));
+    form.append('model_id', 'scribe_v2');
+    form.append('timestamps_granularity', 'word');
 
-    console.log(`   Transcription: "${response.text}"`);
-    return response;
+    const response = await axios.post(
+      'https://api.elevenlabs.io/v1/speech-to-text',
+      form,
+      {
+        headers: {
+          'xi-api-key': ELEVENLABS_API_KEY,
+          ...form.getHeaders()
+        },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
+      }
+    );
+
+    const data = response.data;
+    console.log(`   Language detected: ${data.language_code || 'unknown'}`);
+    console.log(`   Transcription: "${data.text}"`);
+    return data;
   }
 
   /**
-   * Detect "goal" yelling segments from Whisper transcription.
-   * Returns total duration and a formatted message.
+   * Detect "goal" yelling segments from ElevenLabs transcription.
+   * ElevenLabs returns { text, words: [{ text, start, end, type }] }
    */
   detectGoalYelling(transcription) {
     const words = transcription.words || [];
@@ -100,19 +110,23 @@ class VideoProcessor {
     // Match variations of "goal" / "gol" in any language
     const goalPattern = /^(go+a*l+|go+l+)$/i;
 
-    const goalWords = words.filter(w => goalPattern.test(w.word.replace(/[^a-zA-Z]/g, '')));
+    // ElevenLabs uses "text" for the word field (not "word" like Whisper)
+    const goalWords = words.filter(w => {
+      const wordText = (w.text || w.word || '').replace(/[^a-zA-Z]/g, '');
+      return goalPattern.test(wordText);
+    });
 
     if (goalWords.length === 0) {
       // Fall back: check full text for goal-like words
       const fullText = (transcription.text || '').toLowerCase();
       if (fullText.includes('goal') || fullText.includes('gol')) {
-        // Use segment-level timestamps if word-level didn't match
-        const segments = transcription.segments || [];
-        const goalSegments = segments.filter(s =>
-          /go+a*l|go+l/i.test(s.text)
-        );
-        if (goalSegments.length > 0) {
-          const totalSeconds = goalSegments.reduce((sum, s) => sum + (s.end - s.start), 0);
+        // Try to find any words containing "goal"/"gol" with looser matching
+        const looseGoalWords = words.filter(w => {
+          const wordText = (w.text || w.word || '').toLowerCase();
+          return /go+a*l|go+l/i.test(wordText);
+        });
+        if (looseGoalWords.length > 0) {
+          const totalSeconds = looseGoalWords.reduce((sum, w) => sum + ((w.end || 0) - (w.start || 0)), 0);
           return this.formatResult(totalSeconds);
         }
       }

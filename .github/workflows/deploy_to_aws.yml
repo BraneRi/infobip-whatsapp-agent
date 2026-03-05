@@ -46,6 +46,7 @@ jobs:
             WHATSAPP_SENDER=${{ secrets.WHATSAPP_SENDER }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
             OPENAI_MODEL=${{ secrets.OPENAI_MODEL }}
+            ELEVENLABS_API_KEY=${{ secrets.ELEVENLABS_API_KEY }}
             PORT=${{ secrets.PORT }}
             NODE_ENV=${{ secrets.NODE_ENV }}
             EOF
@@ -63,6 +64,7 @@ jobs:
             echo "   - WHATSAPP_SENDER: ${{ secrets.WHATSAPP_SENDER }}"
             echo "   - OPENAI_API_KEY: [CONFIGURED]"
             echo "   - OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}"
+            echo "   - ELEVENLABS_API_KEY: [CONFIGURED]"
             echo "   - PORT: ${{ secrets.PORT }}"
             echo "   - NODE_ENV: ${{ secrets.NODE_ENV }}"
       
