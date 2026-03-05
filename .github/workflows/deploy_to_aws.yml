@@ -74,6 +74,21 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ec2-user/whatsapp-bot
+            # Ensure ffmpeg is installed (needed for video processing)
+            if ! command -v ffmpeg &> /dev/null; then
+              echo "📦 Installing ffmpeg..."
+              sudo yum install -y ffmpeg || sudo amazon-linux-extras install -y ffmpeg || {
+                echo "⚠️  yum/amazon-linux-extras failed, trying static build..."
+                curl -L -o /tmp/ffmpeg.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+                tar -xf /tmp/ffmpeg.tar.xz -C /tmp
+                sudo cp /tmp/ffmpeg-*-static/ffmpeg /usr/local/bin/
+                sudo chmod +x /usr/local/bin/ffmpeg
+                rm -rf /tmp/ffmpeg*
+              }
+              echo "✅ ffmpeg installed: $(ffmpeg -version | head -1)"
+            else
+              echo "✅ ffmpeg already installed: $(ffmpeg -version | head -1)"
+            fi
             # Install dependencies with error handling
             echo "📦 Installing dependencies..."
             npm install || {

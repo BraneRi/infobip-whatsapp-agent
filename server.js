@@ -53,6 +53,7 @@ if (!process.env.WHATSAPP_SENDER) {
 }
 
 const infobipService = require('./services/infobipService');
+const videoProcessor = require('./services/videoProcessor');
 
 // Track processed message IDs to prevent duplicate processing
 const processedMessageIds = new Set();
@@ -224,7 +225,29 @@ async function processIncomingMessage(message) {
         console.log(`   Unsupported type: ${messageType}`);
     }
 
-    // Only process TEXT messages for now (or handle other types as needed)
+    // Handle VIDEO messages — goal yelling detection
+    if (messageType === 'VIDEO') {
+      const videoUrl = message.message.url;
+      if (!videoUrl) {
+        console.log(`   ⚠️  Video message has no URL, skipping`);
+        return;
+      }
+
+      // Send immediate feedback
+      await infobipService.sendTextMessage(senderPhone, 'Listening to you yelling... ⚽🎧');
+
+      // Process video asynchronously
+      try {
+        const result = await videoProcessor.processGoalVideo(videoUrl);
+        await infobipService.sendTextMessage(senderPhone, result.message);
+      } catch (error) {
+        console.error('❌ Video processing failed:', error);
+        await infobipService.sendTextMessage(senderPhone, "Sorry, we couldn't process your video. Please try sending it again.");
+      }
+      return;
+    }
+
+    // Only process TEXT messages for other types
     if (messageType !== 'TEXT' || !messageContent.trim()) {
       console.log(`   ⏭️  Skipping non-text message or empty content`);
       return;
