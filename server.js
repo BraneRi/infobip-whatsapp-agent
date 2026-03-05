@@ -223,15 +223,22 @@ async function processIncomingMessage(message) {
       default:
         messageContent = '[Unsupported message type]';
         console.log(`   Unsupported type: ${messageType}`);
+        console.log(`   Full message object:`, JSON.stringify(message.message, null, 2));
     }
 
     // Handle VIDEO messages — goal yelling detection
-    if (messageType === 'VIDEO') {
+    // Infobip may report videos as "VIDEO" or "UNSUPPORTED" depending on format
+    const isVideo = messageType === 'VIDEO' ||
+      (messageType === 'UNSUPPORTED' && message.message.url);
+
+    if (isVideo) {
       const videoUrl = message.message.url;
       if (!videoUrl) {
         console.log(`   ⚠️  Video message has no URL, skipping`);
         return;
       }
+
+      console.log(`   🎥 Treating as video. URL: ${videoUrl}`);
 
       // Send immediate feedback
       await infobipService.sendTextMessage(senderPhone, 'Listening to you yelling... ⚽🎧');
