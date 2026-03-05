@@ -227,17 +227,11 @@ async function processIncomingMessage(message) {
     }
 
     // Handle VIDEO messages — goal yelling detection
-    // Infobip may report videos as "VIDEO" or "UNSUPPORTED" depending on format
     const isVideo = messageType === 'VIDEO' ||
       (messageType === 'UNSUPPORTED' && message.message.url);
 
     if (isVideo) {
       const videoUrl = message.message.url;
-      if (!videoUrl) {
-        console.log(`   ⚠️  Video message has no URL, skipping`);
-        return;
-      }
-
       console.log(`   🎥 Treating as video. URL: ${videoUrl}`);
 
       // Send immediate feedback
@@ -251,6 +245,15 @@ async function processIncomingMessage(message) {
         console.error('❌ Video processing failed:', error);
         await infobipService.sendTextMessage(senderPhone, "Sorry, we couldn't process your video. Please try sending it again.");
       }
+      return;
+    }
+
+    // UNSUPPORTED without URL — likely a video note or sticker
+    if (messageType === 'UNSUPPORTED') {
+      await infobipService.sendTextMessage(
+        senderPhone,
+        'Please send a regular video from your gallery (not a video note/circle). We need a proper video to detect your GOOOAL yelling! ⚽📹'
+      );
       return;
     }
 
