@@ -4,6 +4,8 @@ const os = require('os');
 const axios = require('axios');
 const FormData = require('form-data');
 
+const { analyzeEmotions, formatEmotionMessage } = require('./emotionAnalyzer');
+
 const INFOBIP_API_KEY = process.env.INFOBIP_API_KEY;
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
@@ -37,6 +39,18 @@ class VideoProcessor {
 
       console.log(`⚽ Detecting goal yelling...`);
       const result = this.detectGoalYelling(transcription);
+
+      // Emotion analysis — runs independently, failure doesn't break goal detection
+      try {
+        console.log(`🎭 Analyzing emotions...`);
+        const emotionResult = await analyzeEmotions(videoPath, transcription);
+        const emotionMessage = formatEmotionMessage(emotionResult);
+        if (emotionMessage) {
+          result.message += emotionMessage;
+        }
+      } catch (error) {
+        console.error('   Emotion analysis failed (non-fatal):', error.message);
+      }
 
       return result;
     } finally {

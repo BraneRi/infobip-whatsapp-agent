@@ -235,7 +235,7 @@ async function processIncomingMessage(message) {
       console.log(`   🎥 Treating as video. URL: ${videoUrl}`);
 
       // Send immediate feedback
-      await infobipService.sendTextMessage(senderPhone, 'Listening to you yelling... ⚽🎧');
+      await infobipService.sendTextMessage(senderPhone, 'Analyzing your video... ⚽🎧🎭');
 
       // Process video asynchronously
       try {
